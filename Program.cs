@@ -1,76 +1,79 @@
-﻿using LinkedListLMS;
-namespace LinkedListLMS
-{ 
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ToDoList
+{
     class Program
     {
         public static void Main(string[] args)
         {
-            StudentLinkedList list = new StudentLinkedList();
-            int choice;
+            TaskManager manager = new TaskManager();
+            bool exit = false;
 
-            do
+            while (!exit)
             {
-                Console.WriteLine("\nMenu:");
-                Console.WriteLine("1. Insert Student");
-                Console.WriteLine("2. Search Student by Index Number");
-                Console.WriteLine("3. Delete Student by Index Number");
-                Console.WriteLine("4. Print All Students");
+                Console.WriteLine("\n===== TO-DO LIST MANAGEMENT MENU =====");
+                Console.WriteLine("1. Add New Task");
+                Console.WriteLine("2. Move Task to In Progress");
+                Console.WriteLine("3. Complete Task");
+                Console.WriteLine("4. Display All Tasks");
                 Console.WriteLine("5. Exit");
-                Console.Write("Enter your choice: ");
+                Console.Write("Enter your choice (1-5): ");
 
-                if (!int.TryParse(Console.ReadLine(), out choice))
-                {
-                    Console.WriteLine("Invalid input. Try again.");
-                    continue;
-                }
+                string choice = Console.ReadLine();
+                Console.WriteLine();
 
                 switch (choice)
                 {
-                    case 1:
-                        Console.Write("Enter Index Number: ");
-                        string index = Console.ReadLine();
-                        Console.Write("Enter Name: ");
+                    case "1":
+                        Console.Write("Task Name: ");
                         string name = Console.ReadLine();
-                        Console.Write("Enter GPA: ");
-                        double gpa = double.Parse(Console.ReadLine());
-                        Console.Write("Enter Admission Year: ");
-                        int year = int.Parse(Console.ReadLine());
-                        Console.Write("Enter NIC: ");
-                        string nic = Console.ReadLine();
-                        Student student = new Student(index, name, gpa, year, nic);
-                        list.AddStudent(student);
+
+                        Console.Write("Task ID (integer): ");
+                        int id = int.Parse(Console.ReadLine());
+
+                        Console.Write("Task Description: ");
+                        string description = Console.ReadLine();
+
+                        Console.Write("Task Date (yyyy-MM-dd): ");
+                        string dateInput = Console.ReadLine();
+                        DateTime date = DateTime.ParseExact(dateInput, "yyyy-MM-dd", null);
+
+                        Task task = new Task(name, id, description, date);
+                        manager.AddToDoTask(task);
+                        Console.WriteLine("Task added successfully.");
                         break;
 
-                    case 2:
-                        Console.Write("Enter Index Number to Search: ");
-                        string searchIndex = Console.ReadLine();
-                        Student found = list.SearchStudent(searchIndex);
-                        if (found != null)
-                            Console.WriteLine("Student Found: " + found);
-                        else
-                            Console.WriteLine("Student not found.");
+                    case "2":
+                        Console.Write("Enter Task ID to move to In Progress: ");
+                        int inProgressId = int.Parse(Console.ReadLine());
+                        manager.MoveToInProgress(inProgressId);
                         break;
 
-                    case 3:
-                        Console.Write("Enter Index Number to Delete: ");
-                        string deleteIndex = Console.ReadLine();
-                        list.RemoveStudent(deleteIndex);
+                    case "3":
+                        manager.CompleteTask();
                         break;
 
-                    case 4:
-                        list.PrintAllStudents();
+                    case "4":
+                        manager.DisplayTasks();
                         break;
 
-                    case 5:
-                        Console.WriteLine("Exiting program...");
+                    case "5":
+                        exit = true;
+                        Console.WriteLine("Exiting the program. Goodbye!");
                         break;
 
                     default:
-                        Console.WriteLine("Invalid option. Try again.");
+                        Console.WriteLine("Invalid choice. Please enter a number between 1 and 5.");
                         break;
                 }
-
-            } while (choice != 5);
+            }
         }
-    }
+    }      
+    
+    
+    
 }
